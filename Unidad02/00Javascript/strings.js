@@ -15,3 +15,4 @@ console.log(frase.toLowerCase())
 console.log(frase.toLocaleUpperCase())
 console.log(frase.toUpperCase())
 console.log(frase.substring(14,20))
+    
