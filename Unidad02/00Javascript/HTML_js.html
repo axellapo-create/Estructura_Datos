@@ -12,19 +12,19 @@
     
     <div style="text-align: center;">
     <label> Nombre: </label>
-    <input type="text" id="Nombre" placeholder="Ingresa tu nombre"> 
+    <input type="text" id="Nombre" placeholder="Ingresa tu nombre" > 
     <p id="error1"></p>
 
     <label> Nota 1:</label> 
-    <input type="text" id="Nota1" placeholder="Nota 1"> 
+    <input type="text" id="Nota1" placeholder="Nota 1" size="30"> 
     <p id="error2"></p> 
 
     <label> Nota 2:</label> 
-    <input type="text" id="Nota2" placeholder="Nota 2"> 
+    <input type="text" id="Nota2" placeholder="Nota 2" size="30"> 
     <p id="error3"></p> 
 
     <label> Nota 3:</label> 
-    <input type="text" id="Nota3" placeholder="Nota 3"> 
+    <input type="text" id="Nota3" placeholder="Nota 3" size="30"> 
     <p id="error4"></p> 
     </div>
     
@@ -45,19 +45,19 @@
             let n3 = document.getElementById("Nota3").value.trim()
 
         if (n1 === "" ){
-            document.getElementById("error2").innerText = "No debe estar vacio"
+            document.getElementById("Nota1").placeholder = "No debe estar vacio"
         } 
 
         if (n2 === "" ){
-            document.getElementById("error3").innerText = "No debe estar vacio"
+            document.getElementById("Nota2").placeholder = "No debe estar vacio"
         } 
 
         if (n3 === "" ){
-            document.getElementById("error4").innerText = "No debe estar vacio"
+            document.getElementById("Nota3").placeholder = "No debe estar vacio"
         } 
 
         if (nombre === "" ){
-            document.getElementById("error1").innerText = "No debe estar vacio"
+            document.getElementById("Nombre").placeholder = "No debe estar vacio"
         } 
 
         if (n1 === "" || n2 === "" || n3 === "" || nombre === "") { return }
@@ -67,29 +67,35 @@
         let nota3 = Number(n3)
 
         if (isNaN(nota1)) {
-            document.getElementById("error2").innerText = "Debe ser un número"
+            document.getElementById("Nota1").value = ""
+            document.getElementById("Nota1").placeholder = "Debe ser un número"
         }
 
         if (isNaN(nota2)) {
-            document.getElementById("error3").innerText = "Debe ser un número"
+            document.getElementById("Nota2").value = ""
+            document.getElementById("Nota2").placeholder = "Debe ser un número"
         }
 
         if (isNaN(nota3)) {
-            document.getElementById("error4").innerText = "Debe ser un número"
+            document.getElementById("Nota3").value = ""
+            document.getElementById("Nota3").placeholder = "Debe ser un número"
         }
 
         if (isNaN(nota1) || isNaN(nota2) || isNaN(nota3)) { return }
 
         if (nota1 > 10 || nota1 < 0){
-            document.getElementById("error2").innerText = "Debe ser estar en el rango de 0-10"
+            document.getElementById("Nota1").value = ""
+            document.getElementById("Nota1").placeholder = "Debe ser estar en el rango de 0-10"
         }
 
         if (nota2 > 10 || nota2 < 0){
-            document.getElementById("error3").innerText = "Debe ser estar en el rango de 0-10"
+            document.getElementById("Nota2").value = ""
+            document.getElementById("Nota2").placeholder = "Debe ser estar en el rango de 0-10"
         }
 
         if (nota3 > 10 || nota3 < 0){
-            document.getElementById("error4").innerText = "Debe ser estar en el rango de 0-10"
+            document.getElementById("Nota3").value = ""
+            document.getElementById("Nota3").placeholder = "Debe ser estar en el rango de 0-10"
         }
 
         if (nota1 > 10 || nota1 < 0 || nota2 > 10 || nota2 < 0 || nota3 > 10 || nota3 < 0){ return } 
