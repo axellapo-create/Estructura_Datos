@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>   
+    <title>Estructura de Datos</title>
+</head>
+
+<body>
+    <div style="text-align: center;">
+    <h1> Calculadora de Promedios</h1>
+    <p>Porfavor ingrese los datos requeridos</p>
+    </div>
+    
+    <div style="text-align: center;">
+    <label> Nombre: </label>
+    <input type="text" id="Nombre" placeholder="Ingresa tu nombre"> 
+    <p id="error1"></p>
+
+    <label> Nota 1:</label> 
+    <input type="text" id="Nota1" placeholder="Nota 1"> 
+    <p id="error2"></p> 
+
+    <label> Nota 2:</label> 
+    <input type="text" id="Nota2" placeholder="Nota 2"> 
+    <p id="error3"></p> 
+
+    <label> Nota 3:</label> 
+    <input type="text" id="Nota3" placeholder="Nota 3"> 
+    <p id="error4"></p> 
+    </div>
+    
+    <div style="text-align: center;"> <button onclick="Calcular()">Calcular</button> </div>
+
+    <script>
+        
+        function Calcular() {
+
+        document.getElementById("error1").innerText = "";
+        document.getElementById("error2").innerText = "";
+        document.getElementById("error3").innerText = "";
+        document.getElementById("error4").innerText = "";
+
+            let nombre = document.getElementById("Nombre").value.trim()
+            let n1 = document.getElementById("Nota1").value.trim()
+            let n2 = document.getElementById("Nota2").value.trim()
+            let n3 = document.getElementById("Nota3").value.trim()
+
+        if (n1 === "" ){
+            document.getElementById("error2").innerText = "No debe estar vacio"
+        } 
+
+        if (n2 === "" ){
+            document.getElementById("error3").innerText = "No debe estar vacio"
+        } 
+
+        if (n3 === "" ){
+            document.getElementById("error4").innerText = "No debe estar vacio"
+        } 
+
+        if (nombre === "" ){
+            document.getElementById("error1").innerText = "No debe estar vacio"
+        } 
+
+        if (n1 === "" || n2 === "" || n3 === "" || nombre === "") { return }
+
+        let nota1 = Number(n1)
+        let nota2 = Number(n2)
+        let nota3 = Number(n3)
+
+        if (isNaN(nota1)) {
+            document.getElementById("error2").innerText = "Debe ser un número"
+        }
+
+        if (isNaN(nota2)) {
+            document.getElementById("error3").innerText = "Debe ser un número"
+        }
+
+        if (isNaN(nota3)) {
+            document.getElementById("error4").innerText = "Debe ser un número"
+        }
+
+        if (isNaN(nota1) || isNaN(nota2) || isNaN(nota3)) { return }
+
+        if (nota1 > 10 || nota1 < 0){
+            document.getElementById("error2").innerText = "Debe ser estar en el rango de 0-10"
+        }
+
+        if (nota2 > 10 || nota2 < 0){
+            document.getElementById("error3").innerText = "Debe ser estar en el rango de 0-10"
+        }
+
+        if (nota3 > 10 || nota3 < 0){
+            document.getElementById("error4").innerText = "Debe ser estar en el rango de 0-10"
+        }
+
+        if (nota1 > 10 || nota1 < 0 || nota2 > 10 || nota2 < 0 || nota3 > 10 || nota3 < 0){ return } 
+
+            let promedio = (nota1+nota2+nota3)/3
+            alert("Estudiante: " + nombre + "\nPromedio: " + promedio.toFixed(2))
+        }
+    </script>
+
+</body>
+</html>

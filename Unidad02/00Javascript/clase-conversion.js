@@ -11,4 +11,4 @@ const decimal = parseInt(binary, 2)
 console.log(decimal)
 
 const suma =  3 - true
-console.log(suma)
+console.log(suma)   
