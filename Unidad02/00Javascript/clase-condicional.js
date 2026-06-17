@@ -67,3 +67,13 @@ let edad = 20
 let mensaje = (edad>=18) ? "Eres mayor de edad" : "Eres menor de edad"
 console.log(mensaje)
 
+//Condicionales en clase
+let nombre = "Fernando"
+
+if (nombre === "Fernando"){
+    console.log("Hola Fer")
+} else if (nombre === "Cristian"){
+    console.log("hola Cris")
+} else {
+    console.log("No encontre tu nombre")
+}
