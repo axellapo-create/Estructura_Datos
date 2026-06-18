@@ -11,6 +11,7 @@ switch (expr){
 
     case "manzana":
         console.log("las manzanas estan 5x$1")
+        
     default:
         console.log(`Lo sentimos con contamos con ${expr}`)
         break;

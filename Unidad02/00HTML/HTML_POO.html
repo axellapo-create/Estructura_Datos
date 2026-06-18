@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión Académica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #764ba2;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .lista-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .lista-section h2 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .list-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+
+        .list-item strong {
+            color: #667eea;
+        }
+
+        .list-item p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .estado {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        .notas-container {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .nota-item {
+            background: white;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nota-item span {
+            background: #ffc107;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .success-message {
+            background: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            animation: slideIn 0.3s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .select-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .select-group.full {
+            grid-template-columns: 1fr;
+        }
+    </style>
+</head>
+<body>
+    <!-- Script para inicializar las clases y arreglos -->
+    <script src="../00Javascript/clases-en-JavaScript/clase-Departamento.js"></script>
+    <script src="../00Javascript/clases-en-JavaScript/clase-Carrera.js"></script>
+    <script src="../00Javascript/clases-en-JavaScript/clase-Persona.js"></script>
+    <script src="../00Javascript/clases-en-JavaScript/clase-Materias.js"></script>
+    <script src="../00Javascript/clases-en-JavaScript/clase-Matricula.js"></script>
+    <script src="../00Javascript/clases-en-JavaScript/script.js"></script>
+
+    <script>
+        // ==========================================
+        // ARREGLOS TEMPORALES PARA ALMACENAR DATOS
+        // ==========================================
+        let Departamentos = [];
+        let Carreras = [];
+        let Profesores = [];
+        let Materias = [];
+        let Estudiantes = [];
+        let Matriculas = [];
+
+        // ==========================================
+        // FUNCIONES DE UTILIDAD PARA LA INTERFAZ
+        // ==========================================
+
+        function mostrarMensajeExito(mensaje, elementoId) {
+            const elemento = document.getElementById(elementoId);
+            const mensajeDiv = document.createElement('div');
+            mensajeDiv.className = 'success-message';
+            mensajeDiv.textContent = mensaje;
+            elemento.insertBefore(mensajeDiv, elemento.firstChild);
+            
+            setTimeout(() => {
+                mensajeDiv.remove();
+            }, 3000);
+        }
+
+        // Crear Departamento
+        function agregarDepartamento() {
+            const nombre = document.getElementById('nombreDepartamento').value.trim();
+
+            if (!nombre) {
+                alert('Por favor ingresa el nombre del Departamento');
+                return;
+            }
+
+            Departamentos.push(new Departamento(nombre));
+            
+            document.getElementById('formDepartamento').reset();
+            mostrarMensajeExito(`✓ Departamento ${nombre} creado correctamente`, 'seccionDepartamentos');
+            actualizarListaDepartamentos();
+            actualizarSelectDepartamentosCarrera();
+            actualizarSelectDepartamentosProfesor();
+        }
+
+        // Crear Carrera
+        function agregarCarrera() {
+            const nombre = document.getElementById('nombreCarrera').value.trim();
+            const duracion = parseInt(document.getElementById('duracionCarrera').value);
+            const selectDepartamento = document.getElementById('selectDepartamentoCarrera');
+            const idDepartamento = parseInt(selectDepartamento.value);
+
+            if (!nombre || !duracion || !selectDepartamento.value) {
+                alert('Por favor completa todos los campos de la Carrera');
+                return;
+            }
+
+            const departamento = Departamentos[idDepartamento];
+            Carreras.push(new Carrera(nombre, duracion, departamento));
+            
+            document.getElementById('formCarrera').reset();
+            mostrarMensajeExito(`✓ Carrera ${nombre} creada correctamente`, 'seccionCarreras');
+            actualizarListaCarreras();
+            actualizarSelectCarrerasEstudiante();
+        }
+
+        // Crear Profesor
+        function agregarProfesor() {
+            const nombre = document.getElementById('nombreProfesor').value.trim();
+            const apellido = document.getElementById('apellidoProfesor').value.trim();
+            const edad = parseInt(document.getElementById('edadProfesor').value);
+            const selectDepartamento = document.getElementById('selectDepartamentoProfesor');
+            const idDepartamento = parseInt(selectDepartamento.value);
+
+            if (!nombre || !apellido || !edad || !selectDepartamento.value) {
+                alert('Por favor completa todos los campos del Profesor');
+                return;
+            }
+
+            const departamento = Departamentos[idDepartamento];
+            Profesores.push(new Profesor(nombre, apellido, edad, departamento));
+            
+            document.getElementById('formProfesor').reset();
+            mostrarMensajeExito(`✓ Profesor ${nombre} ${apellido} creado correctamente`, 'seccionProfesores');
+            actualizarListaProfesores();
+            actualizarSelectProfesoresMaterias();
+        }
+
+        // Crear Materia
+        function agregarMateria() {
+            const nombre = document.getElementById('nombreMateria').value.trim();
+            const creditos = parseInt(document.getElementById('creditosMateria').value);
+            const selectProfesor = document.getElementById('selectProfesoresMaterias');
+            const idProfesor = parseInt(selectProfesor.value);
+
+            if (!nombre || !creditos || !selectProfesor.value) {
+                alert('Por favor completa todos los campos de la Materia y selecciona un Profesor');
+                return;
+            }
+
+            const profesor = Profesores[idProfesor];
+            CrearMateria(nombre, creditos, profesor, Materias);
+            
+            document.getElementById('formMateria').reset();
+            mostrarMensajeExito(`✓ Materia ${nombre} creada correctamente para ${profesor.nombre} ${profesor.apellido}`, 'seccionMaterias');
+            actualizarListaMaterias();
+            actualizarSelectMateriasMatricula();
+        }
+
+        // Crear Estudiante
+        function agregarEstudiante() {
+            const nombre = document.getElementById('nombreEstudiante').value.trim();
+            const apellido = document.getElementById('apellidoEstudiante').value.trim();
+            const edad = parseInt(document.getElementById('edadEstudiante').value);
+            const selectCarrera = document.getElementById('selectCarreraEstudiante');
+            const idCarrera = parseInt(selectCarrera.value);
+
+            if (!nombre || !apellido || !edad || !selectCarrera.value) {
+                alert('Por favor completa todos los campos del Estudiante');
+                return;
+            }
+
+            const carrera = Carreras[idCarrera];
+            CrearEstudiante(nombre, apellido, edad, carrera, Estudiantes);
+            
+            document.getElementById('formEstudiante').reset();
+            mostrarMensajeExito(`✓ Estudiante ${nombre} ${apellido} creado correctamente`, 'seccionEstudiantes');
+            actualizarListaEstudiantes();
+            actualizarSelectEstudiantesMatricula();
+        }
+
+        // Crear Matrícula
+        function agregarMatricula() {
+            const selectEstudiante = document.getElementById('selectEstudianteMatricula');
+            const selectMateria = document.getElementById('selectMateriaMatricula');
+            const idEstudiante = parseInt(selectEstudiante.value);
+            const idMateria = parseInt(selectMateria.value);
+
+            if (!selectEstudiante.value || !selectMateria.value) {
+                alert('Por favor selecciona un Estudiante y una Materia');
+                return;
+            }
+
+            const estudiante = Estudiantes[idEstudiante];
+            const materia = Materias[idMateria];
+
+            // Validar que no exista matrícula duplicada
+            const matriculaExistente = Matriculas.find(m => 
+                m.Estudiante === estudiante && m.Materia === materia
+            );
+
+            if (matriculaExistente) {
+                alert('Esta matrícula ya existe');
+                return;
+            }
+
+            CrearMatricula(estudiante, materia, Matriculas);
+            
+            selectEstudiante.value = '';
+            selectMateria.value = '';
+            mostrarMensajeExito(`✓ Matrícula creada: ${estudiante.nombre} en ${materia.nombre}`, 'seccionMatriculas');
+            actualizarListaMatriculas();
+            actualizarSelectNotasMatricula();
+        }
+
+        // Agregar Nota
+        function agregarNota() {
+            const selectMatricula = document.getElementById('selectMatriculaNota');
+            const nota = parseFloat(document.getElementById('valorNota').value);
+            const idMatricula = parseInt(selectMatricula.value);
+
+            if (!selectMatricula.value || !nota || nota < 0 || nota > 10) {
+                alert('Por favor selecciona una matrícula y una nota válida (0-10)');
+                return;
+            }
+
+            const matricula = Matriculas[idMatricula];
+            AgregarNota(nota, matricula);
+            
+            selectMatricula.value = '';
+            document.getElementById('valorNota').value = '';
+            mostrarMensajeExito(`✓ Nota ${nota} agregada correctamente`, 'seccionNotas');
+            actualizarListaMatriculas();
+        }
+
+        // ==========================================
+        // FUNCIONES PARA ACTUALIZAR LISTAS
+        // ==========================================
+
+        function actualizarListaDepartamentos() {
+            const lista = document.getElementById('listaDepartamentos');
+            if (Departamentos.length === 0) {
+                lista.innerHTML = '<div class="empty-message">No hay departamentos registrados</div>';
+                return;
+            }
+
+            lista.innerHTML = Departamentos.map((dep, index) => `
+                <div class="list-item">
+                    <strong>${dep.nombre}</strong>
+                    <div class="estado">ID: ${index}</div>
+                </div>
+            `).join('');
+        }
+
+        function actualizarListaCarreras() {
+            const lista = document.getElementById('listaCarreras');
+            if (Carreras.length === 0) {
+                lista.innerHTML = '<div class="empty-message">No hay carreras registradas</div>';
+                return;
+            }
+
+            lista.innerHTML = Carreras.map((carrera, index) => `
+                <div class="list-item">
+                    <strong>${carrera.nombre}</strong>
+                    <p>Duración: ${carrera.duracion} semestres</p>
+                    <p>Departamento: ${carrera.departamento.nombre}</p>
+                    <div class="estado">ID: ${index}</div>
+                </div>
+            `).join('');
+        }
+
+        function actualizarListaProfesores() {
+            const lista = document.getElementById('listaProfesores');
+            if (Profesores.length === 0) {
+                lista.innerHTML = '<div class="empty-message">No hay profesores registrados</div>';
+                return;
+            }
+
+            lista.innerHTML = Profesores.map((prof, index) => `
+                <div class="list-item">
+                    <strong>${prof.nombre} ${prof.apellido}</strong>
+                    <p>Edad: ${prof.edad} años</p>
+                    <p>Departamento: ${prof.departamento.nombre}</p>
+                    <div class="estado">ID: ${index}</div>
+                </div>
+            `).join('');
+        }
+
+        function actualizarListaMaterias() {
+            const lista = document.getElementById('listaMaterias');
+            if (Materias.length === 0) {
+                lista.innerHTML = '<div class="empty-message">No hay materias registradas</div>';
+                return;
+            }
+
+            lista.innerHTML = Materias.map((materia, index) => `
+                <div class="list-item">
+                    <strong>${materia.nombre}</strong>
+                    <p>Créditos: ${materia.creditos}</p>
+                    <p>Profesor: ${materia.Profesor.nombre} ${materia.Profesor.apellido}</p>
+                    <p style="color: #999; font-size: 0.9em;">Departamento: ${materia.Profesor.departamento.nombre}</p>
+                    <div class="estado">ID: ${index}</div>
+                </div>
+            `).join('');
+        }
+
+        function actualizarListaEstudiantes() {
+            const lista = document.getElementById('listaEstudiantes');
+            if (Estudiantes.length === 0) {
+                lista.innerHTML = '<div class="empty-message">No hay estudiantes registrados</div>';
+                return;
+            }
+
+            lista.innerHTML = Estudiantes.map((est, index) => `
+                <div class="list-item">
+                    <strong>${est.nombre} ${est.apellido}</strong>
+                    <p>Edad: ${est.edad} años</p>
+                    <p>Carrera: ${est.carrera.nombre}</p>
+                    <p style="color: #999; font-size: 0.9em;">Departamento: ${est.carrera.departamento.nombre}</p>
+                    <div class="estado">ID: ${index}</div>
+                </div>
+            `).join('');
+        }
+
+        function actualizarListaMatriculas() {
+            const lista = document.getElementById('listaMatriculas');
+            if (Matriculas.length === 0) {
+                lista.innerHTML = '<div class="empty-message">No hay matrículas registradas</div>';
+                return;
+            }
+
+            lista.innerHTML = Matriculas.map((mat, index) => `
+                <div class="list-item">
+                    <strong>${mat.Estudiante.nombre} ${mat.Estudiante.apellido}</strong>
+                    <p>Materia: ${mat.Materia.nombre}</p>
+                    <p>Créditos: ${mat.Materia.creditos}</p>
+                    ${mat.Notas.length > 0 ? `
+                        <div class="notas-container">
+                            <strong style="font-size: 0.9em; color: #666;">Notas:</strong>
+                            ${mat.Notas.map(n => `
+                                <div class="nota-item">
+                                    <span>${n}</span>
+                                </div>
+                            `).join('')}
+                            <p style="margin-top: 8px; color: #666; font-weight: bold;">
+                                Promedio: ${(mat.Notas.reduce((a, b) => a + b, 0) / mat.Notas.length).toFixed(2)}
+                            </p>
+                        </div>
+                    ` : '<div class="notas-container"><em style="color: #999;">Sin notas aún</em></div>'}
+                    <div class="estado">ID: ${index}</div>
+                </div>
+            `).join('');
+        }
+
+        // ==========================================
+        // FUNCIONES PARA ACTUALIZAR SELECTORES
+        // ==========================================
+
+        function actualizarSelectDepartamentosCarrera() {
+            const select = document.getElementById('selectDepartamentoCarrera');
+            if (Departamentos.length === 0) {
+                select.innerHTML = '<option value="">No hay departamentos disponibles</option>';
+                return;
+            }
+            select.innerHTML = '<option value="">Selecciona un Departamento</option>' +
+                Departamentos.map((dep, index) => 
+                    `<option value="${index}">${dep.nombre}</option>`
+                ).join('');
+        }
+
+        function actualizarSelectDepartamentosProfesor() {
+            const select = document.getElementById('selectDepartamentoProfesor');
+            if (Departamentos.length === 0) {
+                select.innerHTML = '<option value="">No hay departamentos disponibles</option>';
+                return;
+            }
+            select.innerHTML = '<option value="">Selecciona un Departamento</option>' +
+                Departamentos.map((dep, index) => 
+                    `<option value="${index}">${dep.nombre}</option>`
+                ).join('');
+        }
+
+        function actualizarSelectCarrerasEstudiante() {
+            const select = document.getElementById('selectCarreraEstudiante');
+            if (Carreras.length === 0) {
+                select.innerHTML = '<option value="">No hay carreras disponibles</option>';
+                return;
+            }
+            select.innerHTML = '<option value="">Selecciona una Carrera</option>' +
+                Carreras.map((carrera, index) => 
+                    `<option value="${index}">${carrera.nombre} (${carrera.departamento.nombre})</option>`
+                ).join('');
+        }
+
+        function actualizarSelectProfesoresMaterias() {
+            const select = document.getElementById('selectProfesoresMaterias');
+            if (Profesores.length === 0) {
+                select.innerHTML = '<option value="">No hay profesores disponibles</option>';
+                return;
+            }
+            select.innerHTML = '<option value="">Selecciona un Profesor</option>' +
+                Profesores.map((prof, index) => 
+                    `<option value="${index}">${prof.nombre} ${prof.apellido}</option>`
+                ).join('');
+        }
+
+        function actualizarSelectEstudiantesMatricula() {
+            const select = document.getElementById('selectEstudianteMatricula');
+            if (Estudiantes.length === 0) {
+                select.innerHTML = '<option value="">No hay estudiantes disponibles</option>';
+                return;
+            }
+            select.innerHTML = '<option value="">Selecciona un Estudiante</option>' +
+                Estudiantes.map((est, index) => 
+                    `<option value="${index}">${est.nombre} ${est.apellido} (${est.carrera.nombre})</option>`
+                ).join('');
+        }
+
+        function actualizarSelectMateriasMatricula() {
+            const select = document.getElementById('selectMateriaMatricula');
+            if (Materias.length === 0) {
+                select.innerHTML = '<option value="">No hay materias disponibles</option>';
+                return;
+            }
+            select.innerHTML = '<option value="">Selecciona una Materia</option>' +
+                Materias.map((materia, index) => 
+                    `<option value="${index}">${materia.nombre} (${materia.Profesor.nombre} ${materia.Profesor.apellido})</option>`
+                ).join('');
+        }
+
+        function actualizarSelectNotasMatricula() {
+            const select = document.getElementById('selectMatriculaNota');
+            if (Matriculas.length === 0) {
+                select.innerHTML = '<option value="">No hay matrículas disponibles</option>';
+                return;
+            }
+            select.innerHTML = '<option value="">Selecciona una Matrícula</option>' +
+                Matriculas.map((mat, index) => 
+                    `<option value="${index}">${mat.Estudiante.nombre} ${mat.Estudiante.apellido} - ${mat.Materia.nombre}</option>`
+                ).join('');
+        }
+    </script>
+
+    <div class="container">
+        <h1>📚 Sistema de Gestión Académica</h1>
+
+        <!-- SECCIÓN DE FORMULARIOS -->
+        <div class="sections">
+            <!-- Crear Departamento -->
+            <div class="section" id="seccionDepartamentos">
+                <h2>🏢 Crear Departamento</h2>
+                <form id="formDepartamento" onsubmit="event.preventDefault(); agregarDepartamento();">
+                    <div class="form-group">
+                        <label for="nombreDepartamento">Nombre del Departamento:</label>
+                        <input type="text" id="nombreDepartamento" placeholder="Matemáticas" required>
+                    </div>
+                    <button type="submit">Agregar Departamento</button>
+                </form>
+            </div>
+
+            <!-- Crear Carrera -->
+            <div class="section" id="seccionCarreras">
+                <h2>🎓 Crear Carrera</h2>
+                <form id="formCarrera" onsubmit="event.preventDefault(); agregarCarrera();">
+                    <div class="form-group">
+                        <label for="nombreCarrera">Nombre de la Carrera:</label>
+                        <input type="text" id="nombreCarrera" placeholder="Ingeniería en Sistemas" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="duracionCarrera">Duración (semestres):</label>
+                        <input type="number" id="duracionCarrera" placeholder="8" min="1" max="12" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="selectDepartamentoCarrera">Selecciona un Departamento:</label>
+                        <select id="selectDepartamentoCarrera" required>
+                            <option value="">No hay departamentos disponibles</option>
+                        </select>
+                    </div>
+                    <button type="submit">Agregar Carrera</button>
+                </form>
+            </div>
+
+            <!-- Crear Profesor -->
+            <div class="section" id="seccionProfesores">
+                <h2>👨‍🏫 Crear Profesor</h2>
+                <form id="formProfesor" onsubmit="event.preventDefault(); agregarProfesor();">
+                    <div class="form-group">
+                        <label for="nombreProfesor">Nombre:</label>
+                        <input type="text" id="nombreProfesor" placeholder="Juan" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidoProfesor">Apellido:</label>
+                        <input type="text" id="apellidoProfesor" placeholder="García" required>
+                    </div>
+                    <div class="select-group">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="edadProfesor">Edad:</label>
+                            <input type="number" id="edadProfesor" placeholder="35" min="18" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="selectDepartamentoProfesor">Departamento:</label>
+                        <select id="selectDepartamentoProfesor" required>
+                            <option value="">No hay departamentos disponibles</option>
+                        </select>
+                    </div>
+                    <button type="submit">Agregar Profesor</button>
+                </form>
+            </div>
+
+            <!-- Crear Materia -->
+            <div class="section" id="seccionMaterias">
+                <h2>📖 Crear Materia</h2>
+                <form id="formMateria" onsubmit="event.preventDefault(); agregarMateria();">
+                    <div class="form-group">
+                        <label for="nombreMateria">Nombre de la Materia:</label>
+                        <input type="text" id="nombreMateria" placeholder="Cálculo I" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="creditosMateria">Créditos:</label>
+                        <input type="number" id="creditosMateria" placeholder="3" min="1" max="6" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="selectProfesoresMaterias">Selecciona un Profesor:</label>
+                        <select id="selectProfesoresMaterias" required>
+                            <option value="">No hay profesores disponibles</option>
+                        </select>
+                    </div>
+                    <button type="submit">Agregar Materia</button>
+                </form>
+            </div>
+
+            <!-- Crear Estudiante -->
+            <div class="section" id="seccionEstudiantes">
+                <h2>👨‍🎓 Crear Estudiante</h2>
+                <form id="formEstudiante" onsubmit="event.preventDefault(); agregarEstudiante();">
+                    <div class="form-group">
+                        <label for="nombreEstudiante">Nombre:</label>
+                        <input type="text" id="nombreEstudiante" placeholder="Carlos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidoEstudiante">Apellido:</label>
+                        <input type="text" id="apellidoEstudiante" placeholder="López" required>
+                    </div>
+                    <div class="select-group">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="edadEstudiante">Edad:</label>
+                            <input type="number" id="edadEstudiante" placeholder="20" min="15" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="selectCarreraEstudiante">Carrera:</label>
+                        <select id="selectCarreraEstudiante" required>
+                            <option value="">No hay carreras disponibles</option>
+                        </select>
+                    </div>
+                    <button type="submit">Agregar Estudiante</button>
+                </form>
+            </div>
+
+            <!-- Crear Matrícula -->
+            <div class="section" id="seccionMatriculas">
+                <h2>📋 Crear Matrícula</h2>
+                <form onsubmit="event.preventDefault(); agregarMatricula();">
+                    <div class="form-group">
+                        <label for="selectEstudianteMatricula">Selecciona un Estudiante:</label>
+                        <select id="selectEstudianteMatricula" required>
+                            <option value="">No hay estudiantes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="selectMateriaMatricula">Selecciona una Materia:</label>
+                        <select id="selectMateriaMatricula" required>
+                            <option value="">No hay materias</option>
+                        </select>
+                    </div>
+                    <button type="submit">Crear Matrícula</button>
+                </form>
+            </div>
+
+            <!-- Agregar Nota -->
+            <div class="section" id="seccionNotas">
+                <h2>⭐ Agregar Nota</h2>
+                <form onsubmit="event.preventDefault(); agregarNota();">
+                    <div class="form-group">
+                        <label for="selectMatriculaNota">Selecciona una Matrícula:</label>
+                        <select id="selectMatriculaNota" required>
+                            <option value="">No hay matrículas</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="valorNota">Nota (0-10):</label>
+                        <input type="number" id="valorNota" placeholder="8.5" min="0" max="10" step="0.1" required>
+                    </div>
+                    <button type="submit">Agregar Nota</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- SECCIÓN DE VISUALIZACIÓN DE DATOS -->
+        <div class="lista-section">
+            <h2>🏢 Lista de Departamentos</h2>
+            <div id="listaDepartamentos" class="empty-message">No hay departamentos registrados</div>
+        </div>
+
+        <div class="lista-section">
+            <h2>🎓 Lista de Carreras</h2>
+            <div id="listaCarreras" class="empty-message">No hay carreras registradas</div>
+        </div>
+
+        <div class="lista-section">
+            <h2>👨‍🏫 Lista de Profesores</h2>
+            <div id="listaProfesores" class="empty-message">No hay profesores registrados</div>
+        </div>
+
+        <div class="lista-section">
+            <h2>📖 Lista de Materias</h2>
+            <div id="listaMaterias" class="empty-message">No hay materias registradas</div>
+        </div>
+
+        <div class="lista-section">
+            <h2>👨‍🎓 Lista de Estudiantes</h2>
+            <div id="listaEstudiantes" class="empty-message">No hay estudiantes registrados</div>
+        </div>
+
+        <div class="lista-section">
+            <h2>📋 Lista de Matrículas y Notas</h2>
+            <div id="listaMatriculas" class="empty-message">No hay matrículas registradas</div>
+        </div>
+    </div>
+</body>
+</html>
