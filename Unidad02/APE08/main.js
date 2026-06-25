@@ -52,11 +52,17 @@ function ejecutarPrueba(cantidad, idBuscado) {
     const finSec =
         performance.now();
 
+    const inicioMerge =
+        performance.now();
+
     gestor.mergeSort(
         datos,
         0,
         datos.length - 1
     );
+
+    const finMerge =
+        performance.now();
 
     const inicioBin =
         performance.now();
@@ -73,6 +79,10 @@ function ejecutarPrueba(cantidad, idBuscado) {
 
     console.log(
         `Secuencial: ${(finSec - inicioSec).toFixed(4)} ms`
+    );
+
+    console.log(
+        `MergeSort: ${(finMerge - inicioMerge).toFixed(4)} ms`
     );
 
     console.log(
