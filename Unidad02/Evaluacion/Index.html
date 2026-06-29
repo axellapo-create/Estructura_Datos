@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Gestión de Oleadas</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <header>
+
+        <h1>Sistema de Gestión de Oleadas</h1>
+
+        <h3>Cola Circular FIFO</h3>
+
+    </header>
+
+    <section class="superior">
+
+        <div class="card enemigo">
+
+            <h2>Próximo enemigo</h2>
+
+            <div id="proximoEnemigo">
+
+                No hay enemigos.
+
+            </div>
+
+            <h3>
+
+                Enemigos restantes:
+
+                <span id="cantidadEnemigos">0</span>
+
+            </h3>
+
+        </div>
+
+        <div class="card cola">
+
+            <h2>Representación de la Cola Circular</h2>
+
+            <div id="indices">
+
+            </div>
+
+            <div id="colaVisual">
+
+            </div>
+
+            <div id="punteros">
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="botones">
+
+        <button id="btnDerrotar">
+
+            ⚔ Derrotar enemigo
+
+        </button>
+
+        <button id="btnOrdenar">
+
+            📊 Ordenar por nivel
+
+        </button>
+
+        <button id="btnProcesar">
+
+            🔥 Procesar oleada
+
+        </button>
+
+        <button id="btnReiniciar">
+
+            🔄 Reiniciar
+
+        </button>
+
+    </section>
+
+    <section class="inferior">
+
+        <div class="card buscar">
+
+            <h2>Buscar enemigo</h2>
+
+            <input
+                    id="idBusqueda"
+                    type="number"
+                    placeholder="ID">
+
+            <button id="btnBuscar">
+
+                Buscar
+
+            </button>
+
+        </div>
+
+        <div class="card resultados">
+
+            <h2>Resultados</h2>
+
+            <div id="resultado">
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+<script src="Enemigo.js"></script>
+<script src="ColaCircular.js"></script>
+<script src="Recursividad.js"></script>
+<script src="GestorOleadas.js"></script>
+<script src="app.js"></script>
+
+</body>
+
+</html>
