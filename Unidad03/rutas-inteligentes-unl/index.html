@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sistema académico de rutas inteligentes mediante Dijkstra">
+  <title>Rutas Inteligentes UNL</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header class="cabecera">
+    <nav>
+      <a class="marca" href="#inicio"><span>U</span> Rutas UNL</a>
+      <div>
+        <a href="#calcular">Calcular ruta</a>
+        <a href="#agregar">Agregar lugar</a>
+        <a href="#caminos">Caminos</a>
+      </div>
+    </nav>
+
+    <section class="hero" id="inicio">
+      <div>
+        <p class="eyebrow">Algoritmo de Dijkstra · Proyecto académico</p>
+        <h1>Encuentra el camino más corto dentro del campus</h1>
+        <p>Registra lugares, conéctalos con distancias positivas y calcula el recorrido de menor costo.</p>
+        <a class="boton claro" href="#calcular">Probar el sistema</a>
+      </div>
+      <aside>
+        <small>Grafo actual</small>
+        <strong id="totalLugares">0 lugares</strong>
+        <strong id="totalCaminos">0 caminos activos</strong>
+        <p>Los datos se guardan en este navegador.</p>
+      </aside>
+    </section>
+  </header>
+
+  <main class="contenedor">
+    <section class="seccion">
+      <p class="eyebrow verde">Datos necesarios</p>
+      <h2>¿Qué debes ingresar para agregar una facultad?</h2>
+      <div class="tarjetas">
+        <article><b>01</b><h3>Nombre único</h3><p>Ejemplo: Facultad de Energías Renovables. Es el nodo del grafo.</p><span>Obligatorio</span></article>
+        <article><b>02</b><h3>Tipo y referencia</h3><p>Describen el lugar, aunque no modifican el resultado de Dijkstra.</p><span>Complementario</span></article>
+        <article><b>03</b><h3>Conexión y distancia</h3><p>Indican con qué nodo se conecta y el peso positivo de la arista.</p><span>Obligatorio para crear rutas</span></article>
+      </div>
+      <div class="ejemplo">
+        <strong>Ejemplo completo:</strong>
+        Facultad de Energías Renovables · Facultad · Conecta con Biblioteca central · 140 metros
+      </div>
+    </section>
+
+    <div id="mensaje" class="mensaje" role="status" aria-live="polite">
+      Los datos iniciales son demostrativos; reemplázalos por mediciones verificadas.
+    </div>
+
+    <section class="seccion" id="calcular">
+      <p class="eyebrow verde">Planificador</p>
+      <h2>Calcular la ruta más corta</h2>
+      <div class="panel-ruta">
+        <form id="formRuta" class="form-ruta">
+          <label for="origenRuta">Punto de origen</label>
+          <select id="origenRuta" required></select>
+
+          <span class="flecha">↓</span>
+
+          <label for="destinoRuta">Punto de destino</label>
+          <select id="destinoRuta" required></select>
+
+          <button class="boton primario" type="submit">Calcular con Dijkstra</button>
+        </form>
+        <div id="resultado" class="resultado">
+          <div class="vacio"><b>⌁</b><h3>La ruta aparecerá aquí</h3><p>Selecciona dos lugares diferentes.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion" id="agregar">
+      <p class="eyebrow verde">Administrar el grafo</p>
+      <h2>Agregar un lugar nuevo</h2>
+      <p class="descripcion">Este formulario crea el nodo. Después debes conectarlo con otro lugar.</p>
+
+      <form id="formLugar" class="formulario">
+        <div class="campo ancho">
+          <label for="nombreLugar">Nombre del lugar *</label>
+          <input id="nombreLugar" type="text" minlength="3" placeholder="Ej. Facultad de Energías Renovables" required>
+        </div>
+        <div class="campo">
+          <label for="tipoLugar">Tipo</label>
+          <select id="tipoLugar">
+            <option>Facultad</option><option>Laboratorio</option><option>Servicio</option>
+            <option>Acceso</option><option>Deportivo</option><option>Otro</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="referenciaLugar">Referencia</label>
+          <input id="referenciaLugar" type="text" placeholder="Ej. Frente a la biblioteca">
+        </div>
+        <button class="boton primario" type="submit">Agregar lugar</button>
+      </form>
+    </section>
+
+    <section class="seccion corta" id="conectar">
+      <p class="eyebrow verde">Paso obligatorio</p>
+      <h2>Conectar dos lugares</h2>
+      <p class="descripcion">La distancia en metros es el peso que utilizará Dijkstra.</p>
+
+      <form id="formCamino" class="formulario conexion">
+        <div class="campo"><label for="origenCamino">Lugar A</label><select id="origenCamino" required></select></div>
+        <div class="campo"><label for="destinoCamino">Lugar B</label><select id="destinoCamino" required></select></div>
+        <div class="campo"><label for="distanciaCamino">Distancia en metros *</label><input id="distanciaCamino" type="number" min="1" max="10000" step="1" placeholder="Ej. 140" required></div>
+        <button class="boton oscuro" type="submit">Guardar conexión</button>
+      </form>
+    </section>
+
+    <section class="seccion" id="caminos">
+      <div class="titulo-fila">
+        <div><p class="eyebrow verde">Estado del grafo</p><h2>Lugares registrados</h2></div>
+        <button id="restaurar" class="boton-enlace" type="button">Restaurar ejemplo</button>
+      </div>
+
+      <div class="tabla-contenedor">
+        <table>
+          <thead><tr><th>Lugar</th><th>Tipo</th><th>Referencia</th><th>Estado</th></tr></thead>
+          <tbody id="tablaLugares"></tbody>
+        </table>
+      </div>
+
+      <h3 class="subtitulo">Caminos y bloqueos</h3>
+      <div id="listaCaminos" class="lista-caminos"></div>
+    </section>
+  </main>
+
+  <footer>
+    <strong>Rutas Inteligentes UNL</strong>
+    <span>Demostración académica del algoritmo de Dijkstra</span>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

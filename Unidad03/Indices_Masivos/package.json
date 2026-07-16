@@ -1,0 +1,7 @@
+{
+  "name": "lab12-indices-almacenamiento-masivo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "start": "node main.js", "test": "node pruebas.js", "millon": "node main.js --millon" }
+}
